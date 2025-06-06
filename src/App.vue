@@ -14,11 +14,11 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect } from 'vue';
+import { ref, watchEffect, type Ref } from 'vue';
 
 const theme = ref('dark')
 
-const userInfo = ref({ authenticated: false })
+const userInfo: Ref<{ authenticated: false } | { authenticated: true, display_name: string }> = ref({ authenticated: false })
 
 watchEffect(async () => {
   try {
