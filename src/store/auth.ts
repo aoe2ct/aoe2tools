@@ -5,7 +5,6 @@ export const useAuthStore = defineStore("auth", () => {
   const credentials: Ref<string | null> = ref(localStorage.getItem('credentials'));
 
   function hasTokens() {
-    console.log(credentials.value)
     return !!credentials.value
   }
 
@@ -13,7 +12,6 @@ export const useAuthStore = defineStore("auth", () => {
     if (!(credentials.value)) {
       return {}
     }
-    console.log({ value: credentials.value });
     const tokens = JSON.parse(credentials.value);
     return {
       Authorization: `Bearer ${tokens.access_token}`
