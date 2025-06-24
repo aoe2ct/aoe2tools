@@ -5,6 +5,8 @@
  */
 
 // Composables
+import { useAuthStore } from '@/store/auth'
+import { inject, type Ref } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router/auto'
 import { routes } from 'vue-router/auto-routes'
 
@@ -39,10 +41,10 @@ router.beforeResolve(async to => {
   if (!to.query?.code) {
     return { path: '/' }
   }
-  console.log({ to })
-  console.log(`${import.meta.env.VITE_API_BASE_URL}/auth?code=${to.query.code}&state=${to.query.state}`)
+  const authStore = useAuthStore();
   const authResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/auth?code=${to.query.code}&state=${to.query.state}`, { credentials: 'include' })
-  localStorage.setItem('credentials', await authResponse.text())
+  const authTokens = await authResponse.text()
+  authStore.setCredentials(authTokens);
   return { path: '/' }
 })
 

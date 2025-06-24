@@ -1,5 +1,4 @@
 <template>
-  <HelloWorld />
   <v-data-iterator :items="items" :page="page">
     <template v-slot:default="{ items }">
       <template v-for="(item, i) in items" :key="i">

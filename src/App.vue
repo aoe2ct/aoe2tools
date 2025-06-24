@@ -14,8 +14,10 @@
 </template>
 
 <script lang="ts" setup>
-import { ref, watchEffect, type Ref } from 'vue';
+import { onBeforeMount, provide, ref, watchEffect, type Ref } from 'vue';
+import { useAuthStore } from '@/store/auth';
 
+const authStore = useAuthStore();
 const theme = ref('dark')
 
 const userInfo: Ref<{ authenticated: false } | { authenticated: true, display_name: string }> = ref({ authenticated: false })
@@ -33,11 +35,14 @@ function toggleTheme() {
 }
 
 async function fetchProfile() {
-  const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, { headers: getAuthorizationHeaders(), credentials: "include" })
+  if (!authStore.hasTokens()) {
+    return { authenticated: false }
+  }
+  const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, { headers: authStore.getAuthorizationHeaders(), credentials: "include" })
   if (userResponse.status == 200) {
     return { ...(await userResponse.json()), authenticated: true }
   }
-  localStorage.removeItem('credentials')
+  authStore.removeCredentials()
   return { authenticated: false }
 
 }
