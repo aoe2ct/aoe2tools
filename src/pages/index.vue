@@ -1,5 +1,5 @@
 <template>
-  <div class="fill-height" max-width="900">
+  <div class="container fill-height" max-width="900">
     <div class="tournament-list">
       <div class="card" v-for="item in items">
         <!--
@@ -27,14 +27,9 @@
 </template>
 
 <script lang="ts" setup>
+import type { Tournament } from '@/utils/tournament'
 import { ref, watchEffect, type Ref } from 'vue'
 
-type Tournament = {
-  name: string,
-  id: string,
-  description: string,
-  created_by: string
-};
 const items: Ref<Tournament[]> = ref([])
 
 watchEffect(async () => {

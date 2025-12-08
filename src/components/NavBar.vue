@@ -1,46 +1,11 @@
 <script setup lang="ts">
 import { useAuthStore } from '@/store/auth';
-import { ref, watchEffect, type Ref } from 'vue';
 const authStore = useAuthStore();
-const userInfo: Ref<{ authenticated: false } | { authenticated: true, display_name: string }> = ref({ authenticated: false })
 const loginUrl = `${import.meta.env.VITE_API_BASE_URL}/login`
 
-watchEffect(async () => {
-  try {
-    userInfo.value = await fetchProfile()
-  } catch (error) {
-    console.error("Could not get user profile", error);
-  }
-})
-
-async function fetchProfile() {
-  if (!authStore.hasTokens()) {
-    return { authenticated: false }
-  }
-  const userResponse = await fetch(`${import.meta.env.VITE_API_BASE_URL}/users/me`, { headers: authStore.getAuthorizationHeaders(), credentials: "include" })
-  if (userResponse.status == 200) {
-    return { ...(await userResponse.json()), authenticated: true }
-  }
-  authStore.removeCredentials()
-  return { authenticated: false }
-
-}
-
-
-function getAuthorizationHeaders(): {} | { Authorization: string } {
-  if (!('credentials' in localStorage)) {
-    return {}
-  }
-  const credentials = JSON.parse(localStorage['credentials']);
-  return {
-    Authorization: `Bearer ${credentials.access_token}`
-  }
-}
 
 function logout() {
   authStore.removeCredentials();
-  localStorage.removeItem('credentials');
-  userInfo.value = { authenticated: false };
 }
 
 function toggleTheme() {
@@ -60,7 +25,9 @@ function toggleTheme() {
         <b-navbar-item tag="h1" class="title">AoE2 Tournament Tools</b-navbar-item>
       </template>
       <template #start>
-        <b-navbar-item href="#">Tournament list</b-navbar-item>
+        <b-navbar-item tag="router-link" :to="{ path: '/' }">Tournament list</b-navbar-item>
+        <b-navbar-item v-if="authStore.userInfo.authenticated" tag="router-link" :to="{ path: '/tournament/new' }">Add
+          tournament</b-navbar-item>
       </template>
       <template #end>
         <b-navbar-item tag="div">
@@ -70,10 +37,12 @@ function toggleTheme() {
         </b-navbar-item>
         <b-navbar-item tag="div">
           <div class="buttons">
-            <a v-if="!userInfo.authenticated" class="button is-light" :href="loginUrl"><b-icon icon="account" />
+            <a v-if="!authStore.userInfo.authenticated" class="button is-light" :href="loginUrl"><b-icon
+                icon="account" />
               <span>Login with Discord</span></a>
-            <a v-else class="button is-light" @click="logout"><b-icon icon="logout" /> <span>{{ userInfo.display_name
-            }}</span></a>
+            <a v-else class="button is-light" @click="logout"><b-icon icon="logout" /> <span>{{
+              authStore.userInfo.display_name
+                }}</span></a>
           </div>
         </b-navbar-item>
       </template>
