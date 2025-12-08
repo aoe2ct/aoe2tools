@@ -42,6 +42,16 @@ function logout() {
   localStorage.removeItem('credentials');
   userInfo.value = { authenticated: false };
 }
+
+function toggleTheme() {
+  const html = document.documentElement;
+  const currentTheme = html.getAttribute('data-theme');
+
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+
+  html.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+}
 </script>
 <template>
   <section>
@@ -54,9 +64,16 @@ function logout() {
       </template>
       <template #end>
         <b-navbar-item tag="div">
+          <b-button inverted @click="toggleTheme">
+            <b-icon icon="theme-light-dark" /><span>Toggle theme</span>
+          </b-button>
+        </b-navbar-item>
+        <b-navbar-item tag="div">
           <div class="buttons">
-            <a v-if="!userInfo.authenticated" class="button is-light" :href="loginUrl"><b-icon icon="account" /> <span>Login with Discord</span></a>
-            <a v-else class="button is-light" @click="logout"><b-icon icon="logout" /> <span>{{ userInfo.display_name }}</span></a>
+            <a v-if="!userInfo.authenticated" class="button is-light" :href="loginUrl"><b-icon icon="account" />
+              <span>Login with Discord</span></a>
+            <a v-else class="button is-light" @click="logout"><b-icon icon="logout" /> <span>{{ userInfo.display_name
+            }}</span></a>
           </div>
         </b-navbar-item>
       </template>
