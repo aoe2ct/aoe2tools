@@ -1,19 +1,33 @@
 <template>
-  <v-data-iterator :items="items" :page="page">
-    <template v-slot:default="{ items }">
-      <template v-for="(item, i) in items" :key="i">
-        <v-card :title="item.raw.name" :subtitle="`Created by ${item.raw.created_by}`"
-          :text="item.raw.description"></v-card>
+  <div class="fill-height" max-width="900">
+    <div class="tournament-list">
+      <div class="card" v-for="item in items">
+        <!--
+        <div class="card-image">
+          <figure class="image is-4by3">
+            <img src="https://bulma.io/assets/images/placeholders/1280x960.png" alt="Placeholder image" />
+          </figure>
+        </div>
+-->
+        <div class="card-content">
+          <div class="media">
+            <div class="media-content">
+              <p class="title is-4">{{ item.name }}</p>
+              <p class="subtitle is-6">Created by <em>{{ item.created_by }}</em></p>
+            </div>
+          </div>
 
-        <br>
-      </template>
-    </template>
-  </v-data-iterator>
+          <div class="content">
+            {{ item.description }}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref, watchEffect, type Ref } from 'vue'
-import { VDataIterator, VCard } from 'vuetify/components';
 
 type Tournament = {
   name: string,
@@ -21,7 +35,6 @@ type Tournament = {
   description: string,
   created_by: string
 };
-const page = ref(1)
 const items: Ref<Tournament[]> = ref([])
 
 watchEffect(async () => {
@@ -33,3 +46,11 @@ async function fetchTournaments() {
   return response.json()
 }
 </script>
+
+<style lang="scss" scoped>
+.tournament-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+}
+</style>
