@@ -51,8 +51,9 @@ async function fetchViewers([twitch, kick, youtube]: (
   <div>{{ viewers }}</div>
 </template>
 <style lang="css">
-body {
+html {
   background-color: transparent;
+  overflow: hidden;
 }
 .navbar {
   display: none;
