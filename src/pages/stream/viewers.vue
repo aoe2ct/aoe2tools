@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { onBeforeUnmount, ref, watch } from "vue";
+import { computed, onBeforeUnmount, ref, watch } from "vue";
 import {
   useRoute,
   type LocationQuery,
@@ -46,9 +46,16 @@ async function fetchViewers([twitch, kick, youtube]: (
   const body = await response.json();
   viewers.value = body.total;
 }
+
+const isMemb = computed(
+  () =>
+    query.twitch?.toString()?.toLowerCase() == "membtv" ||
+    query.kick?.toString()?.toLowerCase() == "membtv" ||
+    query.youtube?.toString()?.toLowerCase() == "@membtv",
+);
 </script>
 <template>
-  <div>{{ viewers }}</div>
+  <div :class="{ [$style.memb]: isMemb }">{{ viewers }}</div>
 </template>
 <style lang="css">
 html {
@@ -57,5 +64,17 @@ html {
 }
 .navbar {
   display: none;
+}
+@font-face {
+  font-family: Muara;
+  src: url(@/assets/Muara.ttf);
+}
+</style>
+<style lang="scss" module>
+.memb {
+  font-family: "Muara";
+  font-size: 8em;
+  color: white;
+  padding: 0.4rem;
 }
 </style>
