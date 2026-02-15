@@ -1,28 +1,30 @@
 <script setup lang="ts">
 import { computed, onBeforeUnmount, ref, watch } from "vue";
-import {
-  useRoute,
-  type LocationQuery,
-  type LocationQueryValue,
-} from "vue-router";
+import { useRoute, type LocationQueryValue } from "vue-router";
 
 const { query } = useRoute();
 
 const viewers = ref(0);
 watch(
-  [() => query.twitch, () => query.kick, () => query.youtube],
+  [
+    () => query.twitch,
+    () => query.kick,
+    () => query.youtube,
+    () => query.yt_playlist,
+  ],
   fetchViewers,
   { immediate: true },
 );
 
 const intervalId = setInterval(
-  () => fetchViewers([query.twitch, query.kick, query.youtube]),
+  () =>
+    fetchViewers([query.twitch, query.kick, query.youtube, query.yt_playlist]),
   60 * 1000,
 );
 
 onBeforeUnmount(() => clearInterval(intervalId));
 
-async function fetchViewers([twitch, kick, youtube]: (
+async function fetchViewers([twitch, kick, youtube, yt_playlist]: (
   | LocationQueryValue
   | LocationQueryValue[]
   | undefined
@@ -37,7 +39,10 @@ async function fetchViewers([twitch, kick, youtube]: (
   if (kick) {
     params.set("kick", kick.toString());
   }
-  if (youtube) {
+  if (yt_playlist) {
+    params.set("yt_playlist", yt_playlist.toString());
+  }
+  if (!yt_playlist && youtube) {
     params.set("youtube", youtube.toString());
   }
   const response = await fetch(
