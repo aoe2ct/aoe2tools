@@ -20,18 +20,23 @@
   </section>
 </template>
 <script setup lang="ts">
-import { useAuthStore } from '@/store/auth';
-import type { Tournament } from '@/utils/tournament';
-import { ref, watchEffect } from 'vue';
+import { useAuthStore } from "@/stores/auth";
+import type { Tournament } from "@/utils/tournament";
+import { ref, watchEffect } from "vue";
 
 const authStore = useAuthStore();
 
 const tournament = ref<Tournament>({
-  name: '',
-  id: '',
-  description: '',
-  created_by: '<missing>'
-})
+  name: "",
+  id: "",
+  description: "",
+  created_by: "<missing>",
+});
 
-watchEffect(() => tournament.value.created_by = authStore.userInfo.authenticated ? authStore.userInfo.username : '<missing>');
+watchEffect(
+  () =>
+    (tournament.value.created_by = authStore.userInfo.authenticated
+      ? authStore.userInfo.username
+      : "<missing>"),
+);
 </script>

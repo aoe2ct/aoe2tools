@@ -1,28 +1,20 @@
-/**
- * main.ts
- */
+import { createApp } from "vue";
 
-// Plugins
-import { registerPlugins } from '@/plugins'
+import App from "./App.vue";
+import { registerPlugins } from "@/plugins";
 
-// Components
-import App from './App.vue'
+const app = createApp(App);
 
-// Composables
-import { createApp } from 'vue'
+registerPlugins(app);
 
-const app = createApp(App)
-
-registerPlugins(app)
-
-app.mount('#app')
+app.mount("#app");
 
 // Apply saved theme on page load
-document.addEventListener('DOMContentLoaded', () => {
-  if (!('theme' in localStorage)) {
-    return
+document.addEventListener("DOMContentLoaded", () => {
+  if (!("theme" in localStorage)) {
+    return;
   }
-  const savedTheme = localStorage.getItem('theme') || 'light';
+  const savedTheme = localStorage.getItem("theme") || "light";
 
-  document.documentElement.setAttribute('data-theme', savedTheme);
+  document.documentElement.setAttribute("data-theme", savedTheme);
 });

@@ -6,19 +6,13 @@ const { query } = useRoute();
 
 const viewers = ref(0);
 watch(
-  [
-    () => query.twitch,
-    () => query.kick,
-    () => query.youtube,
-    () => query.yt_playlist,
-  ],
+  [() => query.twitch, () => query.kick, () => query.youtube, () => query.yt_playlist],
   fetchViewers,
   { immediate: true },
 );
 
 const intervalId = setInterval(
-  () =>
-    fetchViewers([query.twitch, query.kick, query.youtube, query.yt_playlist]),
+  () => fetchViewers([query.twitch, query.kick, query.youtube, query.yt_playlist]),
   60 * 1000,
 );
 

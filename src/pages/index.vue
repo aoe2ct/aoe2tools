@@ -13,7 +13,9 @@
           <div class="media">
             <div class="media-content">
               <p class="title is-4">{{ item.name }}</p>
-              <p class="subtitle is-6">Created by <em>{{ item.created_by }}</em></p>
+              <p class="subtitle is-6">
+                Created by <em>{{ item.created_by }}</em>
+              </p>
             </div>
           </div>
 
@@ -27,18 +29,18 @@
 </template>
 
 <script lang="ts" setup>
-import type { Tournament } from '@/utils/tournament'
-import { ref, watchEffect, type Ref } from 'vue'
+import type { Tournament } from "@/utils/tournament";
+import { ref, watchEffect, type Ref } from "vue";
 
-const items: Ref<Tournament[]> = ref([])
+const items: Ref<Tournament[]> = ref([]);
 
 watchEffect(async () => {
-  items.value = await fetchTournaments()
-})
+  items.value = await fetchTournaments();
+});
 
 async function fetchTournaments() {
-  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/tournaments`)
-  return response.json()
+  const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/tournaments`);
+  return response.json();
 }
 </script>
 
